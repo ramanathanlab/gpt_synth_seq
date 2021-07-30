@@ -1,0 +1,11 @@
+pytest
+black
+flake8
+pre-commit
+pyyaml
+pydantic
+biopython
+tqdm
+wandb
+transformers
+tokenizers

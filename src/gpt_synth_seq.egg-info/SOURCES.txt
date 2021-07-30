@@ -1,0 +1,12 @@
+setup.cfg
+setup.py
+src/gpt_synth_seq/__init__.py
+src/gpt_synth_seq.egg-info/PKG-INFO
+src/gpt_synth_seq.egg-info/SOURCES.txt
+src/gpt_synth_seq.egg-info/dependency_links.txt
+src/gpt_synth_seq.egg-info/requires.txt
+src/gpt_synth_seq.egg-info/top_level.txt
+src/gpt_synth_seq/data/__init__.py
+src/gpt_synth_seq/data/dataset.py
+src/gpt_synth_seq/model/__init__.py
+src/gpt_synth_seq/model/gpt2.py

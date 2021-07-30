@@ -1,0 +1,12 @@
+Metadata-Version: 2.1
+Name: gpt-synth-seq
+Version: 0.0.1
+Summary: Using GPT models and huggingface for DNA sequence generation.
+Home-page: UNKNOWN
+Author: 
+Author-email: 
+License: UNKNOWN
+Description: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.6
+Description-Content-Type: text/markdown
