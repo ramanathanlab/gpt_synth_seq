@@ -26,14 +26,14 @@ def train(config):
 
     dataset = get_dataset(
         fasta_files,
-        config.processed_file_name,
+        str(config.processed_file_name),
         append=config.append_new_files,
-        tmp_caching_location=config.tmp_caching_location,
-        tokenizer_file=config.tokenizer_file_location,
+        tmp_caching_location=str(config.tmp_caching_location),
+        tokenizer_file=str(config.tokenizer_file_location),
     )
 
     tokenizer = PreTrainedTokenizerFast(
-        tokenizer_file=config.tokenizer_file_location,
+        tokenizer_file=str(config.tokenizer_file_location),
         add_special_tokens=False,
         padding=True,
         max_length=1024,
