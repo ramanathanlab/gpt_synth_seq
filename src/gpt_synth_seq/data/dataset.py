@@ -8,7 +8,7 @@ from transformers import LineByLineTextDataset, PreTrainedTokenizerFast
 def chunks(lst, n):
     """Yield successive n-sized chunks from lst."""
     for i in range(0, len(lst), n):
-        yield lst[i:i + n]
+        yield lst[i : i + n]
 
 
 def split_into_codons(sequence):
@@ -37,12 +37,16 @@ def fasta_to_codon_splits(filename):
     return whitespace_codon_split_generator(records)
 
 
-def generate_processed_text_file(fasta_files: list, processed_filename: str, append: bool = False):
+def generate_processed_text_file(
+    fasta_files: list, processed_filename: str, append: bool = False
+):
     if append:
-        print("Note: appending to existing processed sequences files. Set append=False to overwrite.")
-        f = open(processed_filename, 'a')
+        print(
+            "Note: appending to existing processed sequences files. Set append=False to overwrite."
+        )
+        f = open(processed_filename, "a")
     else:
-        f = open(processed_filename, 'w')
+        f = open(processed_filename, "w")
     for fasta in tqdm(fasta_files, desc="Fasta File Processing"):
         processed_sequences = fasta_to_codon_splits(fasta)
         for i in processed_sequences:
@@ -52,25 +56,31 @@ def generate_processed_text_file(fasta_files: list, processed_filename: str, app
     return
 
 
-def get_dataset(fasta_files: list, processed_filename: str, append: bool = False,
-                tmp_caching_location='/tmp/gpt_sequence_dataset.pkl',
-                tokenizer_file='codon_tokenizer.json'):
+def get_dataset(
+    fasta_files: list,
+    processed_filename: str,
+    append: bool = False,
+    tmp_caching_location="/tmp/gpt_sequence_dataset.pkl",
+    tokenizer_file="codon_tokenizer.json",
+):
     try:
-        if append: # if appending on to existing we want to make a new dataset
+        if append:  # if appending on to existing we want to make a new dataset
             raise Exception
-        with open(tmp_caching_location, 'rb') as f:
+        with open(tmp_caching_location, "rb") as f:
             dataset = pickle.load(f)
             return dataset
     except Exception:
         generate_processed_text_file(fasta_files, processed_filename, append)
-        tokenizer = PreTrainedTokenizerFast(tokenizer_file=tokenizer_file, add_special_tokens=False, padding=True,
-                                            max_length=1024)
-        tokenizer.add_special_tokens({'pad_token': '[PAD]'})
-        dataset = LineByLineTextDataset(
-            tokenizer=tokenizer,
-            file_path="raw_mdh_dna_sequences.txt",
-            block_size=1024
+        tokenizer = PreTrainedTokenizerFast(
+            tokenizer_file=tokenizer_file,
+            add_special_tokens=False,
+            padding=True,
+            max_length=1024,
         )
-        with open(tmp_caching_location, 'wb') as f:
+        tokenizer.add_special_tokens({"pad_token": "[PAD]"})
+        dataset = LineByLineTextDataset(
+            tokenizer=tokenizer, file_path=processed_filename, block_size=1024
+        )
+        with open(tmp_caching_location, "wb") as f:
             f.write(pickle.dumps(dataset))
         return dataset
