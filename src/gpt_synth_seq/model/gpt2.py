@@ -22,7 +22,7 @@ def train(config):
     fasta_files = []
     for f in os.listdir(config.data_dir):
         if ".fasta" in f:
-            fasta_files.append(os.path.join(config.data_dir, f))
+            fasta_files.append(str(os.path.join(config.data_dir, f)))
 
     dataset = get_dataset(
         fasta_files,
