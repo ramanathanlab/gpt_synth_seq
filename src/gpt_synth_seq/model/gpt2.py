@@ -39,10 +39,10 @@ def train(config):
         max_length=1024,
     )
     tokenizer.add_special_tokens({"pad_token": "[PAD]"})
-    config = GPT2Config(
+    model_configuration = GPT2Config(
         vocab_size=tokenizer.vocab_size, n_positions=1024, max_length=1024
     )
-    model = GPT2LMHeadModel(config)
+    model = GPT2LMHeadModel(model_configuration)
 
     training_args = TrainingArguments(
         output_dir=config.output_model_dir,
