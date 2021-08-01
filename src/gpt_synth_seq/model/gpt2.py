@@ -52,6 +52,7 @@ def train(config):
         save_steps=10_000,
         prediction_loss_only=True,
         save_total_limit=2,
+        report_to=None,
     )
 
     data_collator = DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False)
