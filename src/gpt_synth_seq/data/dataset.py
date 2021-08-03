@@ -24,7 +24,7 @@ def whitespace_codon_split_generator(records):
     """Given a list of SeqIO records, yield strings which are split into codons by whitespace, must be divisible by 3"""
     for s in tqdm(records):
         if len(str(s.seq)) % 3 == 0:
-            yield split_into_codons(str(s.seq))
+            yield split_into_codons(str(s.seq).upper())
         else:
             print("Skipping a sequence which is not divisble by 3...")
             pass
