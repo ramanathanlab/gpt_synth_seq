@@ -8,10 +8,13 @@ from transformers import (
     TextGenerationPipeline,
 )
 
-from Bio.Seq import Seq
+from Bio.Seq import Seq, SeqIO
+from tqdm import tqdm
+from argparse import ArgumentParser
+from Bio.SeqRecord import SeqRecord
 
 
-def generate(model_dir, tokenizer_file, num_seqs=10):
+def generate(model_dir, tokenizer_file, output_file, protein_family, num_seqs=10):
     # loading things in to create pipeline
     model = GPT2LMHeadModel.from_pretrained(model_dir)
     tokenizer = PreTrainedTokenizerFast(
@@ -23,8 +26,10 @@ def generate(model_dir, tokenizer_file, num_seqs=10):
     tokenizer.add_special_tokens({"pad_token": "[PAD]"})
     # initialize the pipeline
     pipeline = TextGenerationPipeline(model=model, tokenizer=tokenizer)
+    # generate all sequences
     seqs = []
-    for i in range(num_seqs):
+    print("Generating sequences...")
+    for i in tqdm(range(num_seqs)):
         s = pipeline("ATG")[0]["generated_text"]
         s = "".join(s.split())
         bio_seq = Seq(s)
@@ -33,7 +38,6 @@ def generate(model_dir, tokenizer_file, num_seqs=10):
             stop_index = bio_seq.find(stop_codon)
             if stop_index != -1:
                 stop_locations.append(stop_index)
-            # check if negative one
 
         try:
             min_stop_location = min(stop_locations)
@@ -44,4 +48,27 @@ def generate(model_dir, tokenizer_file, num_seqs=10):
             # save the stop codon
             bio_seq = bio_seq[: min_stop_location + 3]
 
-        seqs.append(bio_seq)
+        record = SeqRecord(
+            bio_seq,
+            id="GENE{}".format(i),
+            name=protein_family,
+            description="Synthetic generated sequence for family {}".format(
+                protein_family
+            ),
+        )
+
+        seqs.append(record)
+
+    # print sequences to file
+    with open(output_file, "w") as output_handle:
+        SeqIO.write(seqs, output_handle, "fasta")
+
+
+if __name__ == "__main__":
+    parser = ArgumentParser("Generate sequences using an existing trained model.")
+    parser.add_argument("-m", "--model_dir", help="Directory for trained model dir")
+    parser.add_argument(
+        "-o",
+        "--output_file",
+        help="Filename to put generated sequences, must be fasta extension",
+    )
