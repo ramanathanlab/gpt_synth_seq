@@ -22,8 +22,8 @@ def split_into_codons(sequence):
 
 def whitespace_codon_split_generator(records):
     """Given a list of SeqIO records, yield strings which are split into codons by whitespace, must be divisible by 3"""
+    i = 0
     for s in tqdm(records):
-        i = 0
         if len(str(s.seq)) % 3 == 0:
             yield split_into_codons(str(s.seq).upper())
         else:
