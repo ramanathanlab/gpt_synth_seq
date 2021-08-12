@@ -82,5 +82,5 @@ if __name__ == "__main__":
         args.tokenizer_file,
         args.output_file,
         args.protein_family,
-        args.num_seqs,
+        int(args.num_seqs),
     )
