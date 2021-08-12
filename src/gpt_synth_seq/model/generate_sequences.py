@@ -34,8 +34,8 @@ def generate(model_dir, tokenizer_file, output_file, protein_family, num_seqs=10
     generated = pipeline(
         "ATG", num_return_sequences=num_seqs, max_length=1024, do_sample=True
     )
-    for i in generated:
-        s = i["generated_text"]
+    for i, x in enumerate(generated):
+        s = x["generated_text"]
         s = "".join(s.split())
         bio_seq = Seq(s)
         stop_locations = []
@@ -55,7 +55,7 @@ def generate(model_dir, tokenizer_file, output_file, protein_family, num_seqs=10
 
         record = SeqRecord(
             bio_seq,
-            id="GENE{}".format(i),
+            id="GENE{}".format(i + 1),
             name=protein_family,
             description="Synthetic generated sequence for family {}".format(
                 protein_family
