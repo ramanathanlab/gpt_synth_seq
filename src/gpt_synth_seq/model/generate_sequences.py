@@ -72,3 +72,14 @@ if __name__ == "__main__":
         "--output_file",
         help="Filename to put generated sequences, must be fasta extension",
     )
+    parser.add_argugment("-t", "--tokenizer_file", default="codon_tokenizer.json")
+    parser.add_argument("-p", "--protein_family")
+    parser.add_argument("-n", "--num_seqs", default=10)
+    args = parser.parse_args()
+    generate(
+        args.model_dir,
+        args.tokenizer_file,
+        args.output_file,
+        args.protein_family,
+        args.num_seqs,
+    )
