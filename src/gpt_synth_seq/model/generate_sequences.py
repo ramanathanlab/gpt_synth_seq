@@ -10,9 +10,9 @@ from transformers import (
 
 from Bio.Seq import Seq
 from Bio import SeqIO
-from tqdm import tqdm
 from argparse import ArgumentParser
 from Bio.SeqRecord import SeqRecord
+from transformers import set_seed
 
 
 def generate(model_dir, tokenizer_file, output_file, protein_family, num_seqs=10):
@@ -25,13 +25,15 @@ def generate(model_dir, tokenizer_file, output_file, protein_family, num_seqs=10
         max_length=1024,
     )
     tokenizer.add_special_tokens({"pad_token": "[PAD]"})
+    set_seed(0)
     # initialize the pipeline
     pipeline = TextGenerationPipeline(model=model, tokenizer=tokenizer)
     # generate all sequences
     seqs = []
     print("Generating sequences...")
-    for i in tqdm(range(num_seqs)):
-        s = pipeline("ATG")[0]["generated_text"]
+    generated = pipeline("ATG", num_return_sequences=num_seqs)
+    for i in generated:
+        s = i["generated_text"]
         s = "".join(s.split())
         bio_seq = Seq(s)
         stop_locations = []
