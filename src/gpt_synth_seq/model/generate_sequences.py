@@ -31,7 +31,7 @@ def generate(model_dir, tokenizer_file, output_file, protein_family, num_seqs=10
     # generate all sequences
     seqs = []
     print("Generating sequences...")
-    generated = pipeline("ATG", num_return_sequences=num_seqs)
+    generated = pipeline("ATG", num_return_sequences=num_seqs, max_length=1024)
     for i in generated:
         s = i["generated_text"]
         s = "".join(s.split())
