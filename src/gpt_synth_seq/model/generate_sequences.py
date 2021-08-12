@@ -8,7 +8,8 @@ from transformers import (
     TextGenerationPipeline,
 )
 
-from Bio.Seq import Seq, SeqIO
+from Bio.Seq import Seq
+from Bio import SeqIO
 from tqdm import tqdm
 from argparse import ArgumentParser
 from Bio.SeqRecord import SeqRecord
